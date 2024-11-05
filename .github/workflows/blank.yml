@@ -1,0 +1,28 @@
+name: Docker Secret Scanner
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour
+
+jobs:
+  scan-docker-org:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Install TruffleHog
+      run: |
+        docker pull trufflesecurity/trufflehog
+
+    - name: Run Docker Organization Secret Scanner
+      env:
+        ORG_NAME: "dell"   # Replace with your Docker organization name
+        DOCKER_USERNAME: ${{ secrets.megamindxy }}
+        DOCKER_PASSWORD: ${{ secrets.Strongpass@1 }}
+      run: |
+        bash ./scan_org_docker_secrets_trufflehog.sh
